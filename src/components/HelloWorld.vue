@@ -97,7 +97,7 @@ export default {
 
         return {
           start: dayOffsetStart * rowHeight + rowHeight/2,
-          end: dayOffsetEnd * rowHeight,
+          end: dayOffsetEnd * rowHeight+ rowHeight/2,
         }
       })
     }
@@ -115,9 +115,15 @@ export default {
           if (item) {
             item.note = this.editorContents
           } else {
+            const range = this.selection.start.getTime() !== this.selection.end.getTime() ? {
+              start: this.selection.start,
+              end: this.selection.end,
+            } : null
+
             this.items.push({
               date: new Date(this.selection.end),
               note: this.editorContents,
+              range,
             })
           }
           if(this.editorContents === ""){
@@ -192,8 +198,19 @@ export default {
     <svg ref="overlay" class="overlay">
       <!-- <rect top="0" left="0" width="100%" height="100%" fill="rgba(0,0,0,0.5)" /> -->
       <g v-for="arrow in arrows">
-        <circle :cx="500" :cy="arrow.start" r="5" fill="black" />
-        <line :y1="arrow.start" x1="500" :y2="arrow.end" x2="500" stroke="black" stroke-width="2" />
+        <circle :cx="500" :cy="arrow.start" r="5" fill="rgba(10, 10, 200, 0.5)" />
+        <line :y1="arrow.start" x1="500" :y2="arrow.end" x2="500" stroke="rgba(10, 10, 200, 0.5)" stroke-width="2" />
+        <!-- arrow top -->
+        <g v-if="arrow.start < arrow.end">
+          <line :y1="arrow.end" x1="500" :y2="arrow.end - 10" x2="495" stroke="rgba(10, 10, 200, 0.5)" stroke-width="2" />
+          <line :y1="arrow.end" x1="500" :y2="arrow.end - 10" x2="505" stroke="rgba(10, 10, 200, 0.5)" stroke-width="2" />
+        </g>
+        <!-- arrow bottom -->
+        <g v-else>
+          <line :y1="arrow.end" x1="500" :y2="arrow.end + 10" x2="495" stroke="rgba(10, 10, 200, 0.5)" stroke-width="2" />
+          <line :y1="arrow.end" x1="500" :y2="arrow.end + 10" x2="505" stroke="rgba(10, 10, 200, 0.5)" stroke-width="2" />
+        </g>
+
       </g>
     </svg>
   </div>
