@@ -34,10 +34,10 @@ export default {
 }
 
 .selected{
-  background-color: rgb(213, 208, 255);
+  background-color: rgb(226, 222, 255);
 }
 .isCursor{
-  border: 1px solid rgb(100, 146, 255);
+  border: 1px solid rgb(30, 97, 255);
 }
 
 .day__item {
