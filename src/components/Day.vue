@@ -1,6 +1,6 @@
 <template>
   <div class="day" :class="{selected, isCursor}">
-    <div class="day__label">{{ date.getDate() }}</div>
+    <div class="day__label" :class="dayType">{{ date.getDate() }}</div>
     <div class="day__item" v-for="item in items">
       {{ item.note }}
     </div>
@@ -16,6 +16,18 @@ export default {
     isCursor: Boolean,
     editing: Boolean,
   },
+  computed: {
+    dayType() {
+      const day = this.date.getDay()
+      if (day === 0) {
+        return "day__label--sunday"
+      } else if (day === 6) {
+        return "day__label--saturday"
+      } else {
+        return ""
+      }
+    },
+  },
 }
 
 </script>
@@ -26,12 +38,20 @@ export default {
   display: flex;
 }
 
+
 .day__label {
   padding: 0.5em;
   width: 2em;
   text-align: center;
   font-weight: 700;
-  color: rgba(54, 42, 157, 0.5);
+  color: rgb(74, 74, 74);
+}
+
+.day__label--saturday{
+  color: rgb(54, 42, 157);
+}
+.day__label--sunday{
+  color: rgb(255, 0, 0);
 }
 
 .selected{
