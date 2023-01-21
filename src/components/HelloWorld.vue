@@ -21,12 +21,12 @@ export default {
         }
       ],
       range: {
-        start: "2023-01-01",
-        end: "2023-02-28",
+        start: new Date("2023-01-01"),
+        end: new Date("2023-02-28"),
       },
       selection: {
-        start: "2023-01-11",
-        end: "2023-01-21",
+        start: new Date("2023-01-11"),
+        end: new Date("2023-01-21"),
       }
     }
   },
@@ -49,7 +49,9 @@ export default {
   <div class="card">
     <!-- カレンダー作るぞ -->
     <div>
-      <Day v-for="date in dates" :key="date" :date="date" :items="items.filter(i => i.date.getTime() === date.getTime())" />
+      <Day v-for="date in dates" :key="date" :date="date"
+        :selected="selection.start <= date && date <= selection.end"
+        :items="items.filter(i => i.date.getTime() === date.getTime())" />
     </div>
   </div>
 </template>

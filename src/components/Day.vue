@@ -1,5 +1,5 @@
 <template>
-  <div class="day">
+  <div class="day" :class="{'selected': selected}">
     <div class="day__label">{{ date.getDate() }}</div>
     <div class="day__item" v-for="item in items">
       {{ item.note }}
@@ -12,6 +12,7 @@ export default {
   props: {
     date: Date,
     items: Array,
+    selected: Boolean,
   },
 }
 
@@ -23,6 +24,10 @@ export default {
   width: 2em;
   text-align: center;
   font-weight: 700;
+}
+
+.selected{
+  background-color: rgb(177, 168, 255);
 }
 
 .day__item {
