@@ -1,7 +1,12 @@
 <script>
+import Day from "./Day.vue"
+
 export default {
   props: {
     msg: String
+  },
+  components: {
+    Day
   },
   data() {
     return {
@@ -18,6 +23,10 @@ export default {
       range: {
         start: "2023-01-01",
         end: "2023-02-28",
+      },
+      selection: {
+        start: "2023-01-11",
+        end: "2023-01-21",
       }
     }
   },
@@ -40,14 +49,7 @@ export default {
   <div class="card">
     <!-- カレンダー作るぞ -->
     <div>
-      <div class="day" v-for="date in dates">
-        <div class="day__label">{{ date.getDate() }}</div>
-        <div class="day__item" v-for="item in items">
-          <div v-if="item.date.getTime() === date.getTime()">
-            {{ item.note }}
-          </div>
-        </div>
-      </div>
+      <Day v-for="date in dates" :key="date" :date="date" :items="items.filter(i => i.date.getTime() === date.getTime())" />
     </div>
   </div>
 </template>
@@ -56,17 +58,5 @@ export default {
 .day {
   border: 1px solid;
   display: flex;
-}
-
-.day__label {
-  padding: 0.5em;
-  width: 2em;
-  text-align: center;
-  font-weight: 700;
-}
-
-.day__item {
-  background-color: #EEE;
-  flex: 1;
 }
 </style>
