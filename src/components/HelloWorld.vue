@@ -13,11 +13,11 @@ export default {
       items: [
         {
           date: new Date("2023-01-30"),
-          note: "今日は楽しかったよ",
+          note: "今日はGUIを作った",
         },
         {
           date: new Date("2023-01-31"),
-          note: "daiizさんと時間UIについて話す",
+          note: "自動勉強会予定日",
         }
       ],
       range: {
@@ -27,7 +27,9 @@ export default {
       selection: {
         start: new Date("2023-01-11"),
         end: new Date("2023-01-21"),
-      }
+      },
+      editorContents : "",
+      editing: false,
     }
   },
   computed: {
@@ -69,16 +71,52 @@ export default {
         return {
           top: pos.top + "px",
           left: pos.left + 16 * 3 + "px",
+          opacity: this.editing ? 1 : 0,
         }
       }
-      return {}
+      return {
+        opacity: this.editing ? 1 : 0,
+      }
+    },
+    cursorItem(){
+      return this.items.find(i => i.date.getTime() === this.selection.end.getTime())
     }
   },
   methods: {
     onKeyDown(e) {
+      if (e.key === "Delete") {
+        this.items = this.items.filter(i => i.date.getTime() !== this.selection.end.getTime())
+        return
+      }
+
+      if (e.key === "Enter") {
+        if (this.editing) {
+          const item = this.cursorItem
+          if (item) {
+            item.note = this.editorContents
+          } else {
+            this.items.push({
+              date: new Date(this.selection.end),
+              note: this.editorContents,
+            })
+          }
+          if(this.editorContents === ""){
+            this.items = this.items.filter(i => i.date.getTime() !== this.selection.end.getTime())
+          }
+          this.editing = false
+        } else {
+          this.editorContents = this.cursorItem ? this.cursorItem.note : ""
+          this.editing = true
+        }
+        return
+      }
+
       const cursor = new Date(this.selection.end)
       const isArrow = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
-      if (!isArrow) return
+      if (!isArrow) {
+        this.editing = true
+        return
+      }
       if (e.key === "ArrowUp") {
         cursor.setDate(cursor.getDate() - 1)
       } else if (e.key === "ArrowDown") {
@@ -94,8 +132,11 @@ export default {
         this.selection.start = cursor
         this.selection.end = cursor
       }
+      this.editorContents = this.cursorItem ? this.cursorItem.note : ""
       e.preventDefault()
       const endEl = this.cursorElement
+      this.$refs.input.focus()
+
       if (endEl && endEl.length > 0 && endEl[0]) {
         endEl[0].$el.scrollIntoView({
           block: "nearest",
@@ -123,7 +164,7 @@ export default {
     </div>
 
     <div class="editor" :style="editorStyle">
-      <input />
+      <input ref="input" v-model="editorContents" />
     </div>
   </div>
 </template>
@@ -137,6 +178,7 @@ export default {
 }
 .editor input{
   height: 36px;
+  width: 24em;
   border: none;
   font-size: inherit;
   font-family: inherit;
