@@ -51,14 +51,12 @@ export default {
     <div>
       <Day v-for="date in dates" :key="date" :date="date"
         :selected="selection.start <= date && date <= selection.end"
+        :isCursor="date.getTime() === selection.end.getTime()"
         :items="items.filter(i => i.date.getTime() === date.getTime())" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.day {
-  border: 1px solid;
-  display: flex;
-}
+
 </style>
