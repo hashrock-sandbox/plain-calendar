@@ -14,6 +14,7 @@ export default {
     items: Array,
     selected: Boolean,
     isCursor: Boolean,
+    editing: Boolean,
   },
 }
 

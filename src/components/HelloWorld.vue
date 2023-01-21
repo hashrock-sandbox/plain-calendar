@@ -46,6 +46,32 @@ export default {
     },
     selectionBottom() {
       return this.selection.start < this.selection.end ? this.selection.end : this.selection.start
+    },
+    cursorElement(){
+      return this.$refs["day-" + this.selection.end.getTime()]
+    },
+    cursorElementPosition(){
+      const el = this.cursorElement
+      if (el && el.length > 0 && el[0]) {
+        const rect = el[0].$el.getBoundingClientRect()
+        return {
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width,
+          height: rect.height,
+        }
+      }
+      return null
+    },
+    editorStyle() {
+      const pos = this.cursorElementPosition
+      if (pos) {
+        return {
+          top: pos.top + "px",
+          left: pos.left + 16 * 3 + "px",
+        }
+      }
+      return {}
     }
   },
   methods: {
@@ -69,7 +95,7 @@ export default {
         this.selection.end = cursor
       }
       e.preventDefault()
-      const endEl = this.$refs["day-" + cursor.getTime()]
+      const endEl = this.cursorElement
       if (endEl && endEl.length > 0 && endEl[0]) {
         endEl[0].$el.scrollIntoView({
           block: "nearest",
@@ -89,15 +115,31 @@ export default {
 <template>
   <div>
     <!-- カレンダー作るぞ -->
-    <div>
+    <div class="wrapper">
       <Day v-for="date in dates" :key="date" :date="date" :ref="'day-' + date.getTime()"
         :selected="selectionTop <= date && date <= selectionBottom"
         :isCursor="date.getTime() === selection.end.getTime()"
         :items="items.filter(i => i.date.getTime() === date.getTime())" />
     </div>
+
+    <div class="editor" :style="editorStyle">
+      <input />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.wrapper{
+  position: relative;
+}
+.editor{
+  position: absolute;
+}
+.editor input{
+  height: 36px;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+}
 
 </style>
