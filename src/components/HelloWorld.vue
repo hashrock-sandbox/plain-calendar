@@ -13,11 +13,11 @@ export default {
       items: [
         {
           date: new Date("2023-01-30"),
-          note: "test",
+          note: "今日は楽しかったよ",
         },
         {
           date: new Date("2023-01-31"),
-          note: "test2",
+          note: "daiizさんと時間UIについて話す",
         }
       ],
       range: {
@@ -49,28 +49,28 @@ export default {
     }
   },
   methods: {
-    onKeyDown(e){
+    onKeyDown(e) {
       const cursor = new Date(this.selection.end)
       const isArrow = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)
-      if(!isArrow) return
-      if(e.key === "ArrowUp"){
+      if (!isArrow) return
+      if (e.key === "ArrowUp") {
         cursor.setDate(cursor.getDate() - 1)
-      }else if(e.key === "ArrowDown"){
+      } else if (e.key === "ArrowDown") {
         cursor.setDate(cursor.getDate() + 1)
-      }else if(e.key === "ArrowLeft"){
+      } else if (e.key === "ArrowLeft") {
         cursor.setDate(cursor.getDate() - 1)
-      }else if(e.key === "ArrowRight"){
+      } else if (e.key === "ArrowRight") {
         cursor.setDate(cursor.getDate() + 1)
       }
-      if(e.shiftKey){
+      if (e.shiftKey) {
         this.selection.end = cursor
-      }else{
+      } else {
         this.selection.start = cursor
         this.selection.end = cursor
       }
       e.preventDefault()
       const endEl = this.$refs["day-" + cursor.getTime()]
-      if(endEl && endEl.length > 0 && endEl[0]){
+      if (endEl && endEl.length > 0 && endEl[0]) {
         endEl[0].$el.scrollIntoView({
           block: "nearest",
         })
@@ -90,8 +90,7 @@ export default {
   <div>
     <!-- カレンダー作るぞ -->
     <div>
-      <Day v-for="date in dates" :key="date" :date="date"
-        :ref="'day-'+date.getTime()"
+      <Day v-for="date in dates" :key="date" :date="date" :ref="'day-' + date.getTime()"
         :selected="selectionTop <= date && date <= selectionBottom"
         :isCursor="date.getTime() === selection.end.getTime()"
         :items="items.filter(i => i.date.getTime() === date.getTime())" />
